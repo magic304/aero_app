@@ -26,7 +26,7 @@ class DataWidget(QMainWindow):
         # self.absolute_path = os.path.split(sys.argv[0])[0].replace('\\','/')
         super(DataWidget, self).__init__()
         self.type = type or self.types[0]
-        self.name = self.meta[self.type]
+        self.name = self.type
         self.model = DataCombineModel.loadModel(self.type)
         self.name = f"{self.name}"
         self.setWindowTitle(f'{self.name}')

@@ -7,15 +7,15 @@ from PyQt5.QtWidgets import *
 
 
 class DataDialog(QDialog):
-    meta = {'2d_non_viscous': '2D无粘数据集', '2d_viscous': '2D粘性数据集', '2d_viscous_dull': '2D粘性带钝度数据集',
-            '3d_viscous': '3D粘性数据集', '3d_viscous_dull': '3D粘性带钝度数据集'}
+    # meta = {'2d_non_viscous': '2D无粘数据集', '2d_viscous': '2D粘性数据集', '2d_viscous_dull': '2D粘性带钝度数据集',
+    #         '3d_viscous': '3D粘性数据集', '3d_viscous_dull': '3D粘性带钝度数据集'}
 
     def __init__(self, parent=None):
         super(DataDialog, self).__init__(parent)
-        self.setMinimumSize(500, 150)
+        self.setMinimumSize(500, 0)
         self.absolute_path = os.path.split(sys.argv[0])[0]
         self.setWindowTitle('增加数据集')
-        self.setWindowIcon(QIcon(f'{self.absolute_path}\res\data.png'))
+        self.setWindowIcon(QIcon(f'{self.absolute_path}/res/data.png'))
         self.name = '2D无粘数据集'
         self.type = '2d_non_viscous'
         self.file = ''
@@ -24,13 +24,15 @@ class DataDialog(QDialog):
         layout_out = QVBoxLayout()
         # 第一行 水平布局
         layout_row1 = QHBoxLayout()
-        layout_row1.addWidget(QLabel("创建数据集"))
+        layout_row1.addWidget(QLabel("数据集名称："))
         self.loading_label = QLabel(self)
         layout_row1.addWidget(self.loading_label)
         layout_out.addLayout(layout_row1)
 
         # 第二行
-        layout_out.addWidget(self.__add_chose_btn())
+        self.set_name_text = QLineEdit()
+        layout_out.addWidget(self.set_name_text)
+        self.set_name_text.textChanged.connect(lambda: self.btnstate(self.set_name_text.text()))
 
         # 第三行
         layout_row3 = QHBoxLayout()
@@ -44,37 +46,39 @@ class DataDialog(QDialog):
 
         self.setLayout(layout_out)
 
-    def __add_chose_btn(self) -> 'QFrame':
-        frame = QFrame()
-        frame.setFrameShape(QFrame.StyledPanel)
-        grid_layout = QGridLayout()
-        frame.setLayout(grid_layout)
-
-        btn_1 = QRadioButton('2D无粘数据集')
-        btn_1.setChecked(True)
-        btn_1.toggled.connect(lambda: self.btnstate('2d_non_viscous'))
-        grid_layout.addWidget(btn_1, 1, 1)
-
-        btn_1 = QRadioButton('2D粘性数据集')
-        btn_1.toggled.connect(lambda: self.btnstate('2d_viscous'))
-        grid_layout.addWidget(btn_1, 1, 2)
-
-        btn_1 = QRadioButton('2D粘性带钝度数据集')
-        btn_1.toggled.connect(lambda: self.btnstate('2d_viscous_dull'))
-        grid_layout.addWidget(btn_1, 1, 3)
-
-        btn_1 = QRadioButton('3D粘性数据集')
-        btn_1.toggled.connect(lambda: self.btnstate('3d_viscous'))
-        grid_layout.addWidget(btn_1, 2, 1)
-
-        btn_1 = QRadioButton('3D粘性带钝度数据集')
-        btn_1.toggled.connect(lambda: self.btnstate('3d_viscous_dull'))
-        grid_layout.addWidget(btn_1, 2, 2)
-        return frame
+    # def __add_chose_btn(self) -> 'QFrame':
+    #     frame = QFrame()
+    #     frame.setFrameShape(QFrame.StyledPanel)
+    #     grid_layout = QGridLayout()
+    #     frame.setLayout(grid_layout)
+    #
+    #
+    #
+    #     btn_1 = QRadioButton('2D无粘数据集')
+    #     btn_1.setChecked(True)
+    #     btn_1.toggled.connect(lambda: self.btnstate('2d_non_viscous'))
+    #     grid_layout.addWidget(btn_1, 1, 1)
+    #
+    #     btn_1 = QRadioButton('2D粘性数据集')
+    #     btn_1.toggled.connect(lambda: self.btnstate('2d_viscous'))
+    #     grid_layout.addWidget(btn_1, 1, 2)
+    #
+    #     btn_1 = QRadioButton('2D粘性带钝度数据集')
+    #     btn_1.toggled.connect(lambda: self.btnstate('2d_viscous_dull'))
+    #     grid_layout.addWidget(btn_1, 1, 3)
+    #
+    #     btn_1 = QRadioButton('3D粘性数据集')
+    #     btn_1.toggled.connect(lambda: self.btnstate('3d_viscous'))
+    #     grid_layout.addWidget(btn_1, 2, 1)
+    #
+    #     btn_1 = QRadioButton('3D粘性带钝度数据集')
+    #     btn_1.toggled.connect(lambda: self.btnstate('3d_viscous_dull'))
+    #     grid_layout.addWidget(btn_1, 2, 2)
+    #     return frame
 
     def btnstate(self, b_type):  # 输出按钮1与按钮2的状态，选中还是没选中
         self.type = b_type
-        self.name = self.meta[b_type]
+        self.name = self.set_name_text.text()
 
     # def download_template(self):
     #     loading_gif = QMovie(f'{self.absolute_path}/res/loading2.gif')	# 加载动图
@@ -90,17 +94,6 @@ class DataDialog(QDialog):
         self.file, filetype = QFileDialog.getOpenFileName(self, "选择xls文件", "./", "excel文件(*.xls *.xlsx);;ALL(*.*)")
         self.file_lineEdit.setText(str(self.file))
 
-    # class TemplateDownloadWorker(QThread):
-
-
-#     def __init__(self, circlingDialog):
-#         super(TemplateDownloadWorker,self).__init__(circlingDialog)  
-#         self.circlingDialog = circlingDialog
-
-#     def run(self): 
-#         path =f'{self.circlingDialog.absolute_path}/template/template.xlsx' 
-#         QDesktopServices.openUrl(QUrl.fromLocalFile(path)) 
-#         self.circlingDialog.download_finish()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

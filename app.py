@@ -19,7 +19,7 @@ os.environ["PATH"] += os.pathsep + absolute_path+'/Graphviz/bin'  #注意修改�
 class MainWindow(QMainWindow):
     meta_node_types = ['data', 'modeling']
     meta_node_names = ['数据', '模型']
-    meta_node_icos = ['data.png', 'data.png', 'modeling.png']
+    meta_node_icos = ['data.png', 'modeling.png']
 
     def __init__(self):
         super().__init__()
