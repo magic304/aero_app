@@ -1,8 +1,9 @@
 import datetime
 import os
 import shutil
-import uuid
 import sys
+import uuid
+
 from PyQt5.QtCore import *
 
 from figures import *
@@ -11,9 +12,6 @@ absolute_path = os.path.split(sys.argv[0])[0]
 
 
 class DataWidget(QMainWindow):
-    meta = {'2d_non_viscous': '2D无粘数据集', '2d_viscous': '2D粘性数据集', '2d_viscous_dull': '2D粘性带钝度数据集',
-            '3d_viscous': '3D粘性数据集', '3d_viscous_dull': '3D粘性带钝度数据集'}
-    types = list(meta.keys())
     progress_signal = pyqtSignal(str, str, int)
     model_train_status_signal = pyqtSignal(int, float, float)  # index, loss, rmse
     model_train_finish_signal = pyqtSignal(str)
@@ -25,7 +23,7 @@ class DataWidget(QMainWindow):
     def __init__(self, type=None, callback=None):
         # self.absolute_path = os.path.split(sys.argv[0])[0].replace('\\','/')
         super(DataWidget, self).__init__()
-        self.type = type or self.types[0]
+        self.type = type
         self.name = self.type
         self.model = DataCombineModel.loadModel(self.type)
         self.name = f"{self.name}"
@@ -148,7 +146,6 @@ class DataWidget(QMainWindow):
         self.updateProgress("正在处理", '加载数据', 100)
 
     def browse_file(self):
-        # fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
         files, filetype = QFileDialog.getOpenFileNames(
             self, "选择CSV文件", "./", "CSV文件(*.csv);;ALL(*.*)")
         if (len(files) > 0):

@@ -134,7 +134,6 @@ class MainWindow(QMainWindow):
     def loadTree(self):
         self.tree_dat = TreeData.instance()
         self.treeview.clear()
-
         for inx in range(len(MainWindow.meta_node_types)):
             node_type = MainWindow.meta_node_types[inx]
             root_node = QTreeWidgetItem(self.treeview)

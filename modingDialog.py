@@ -33,6 +33,7 @@ class ModelingDialog(QDialog):
         self.init_UI()
         self.__init_data_model_fields()
         self.model_train_status_signal.connect(self.update_train_status)
+        self.setWindowIcon(QIcon(f'{self.absolute_path}/res/modeling.png'))
 
     def init_UI(self):
         # 横向布局
