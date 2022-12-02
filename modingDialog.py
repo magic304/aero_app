@@ -21,7 +21,6 @@ class ModelingDialog(QDialog):
         self.setMinimumSize(900, 550)
         self.absolute_path = os.path.split(sys.argv[0])[0]
         self.setWindowTitle('建模')
-        self.setWindowIcon(QIcon(f'{self.absolute_path}\res\modeling.png'))
         self.name = '2D无粘模型'
         self.type = 'direct_modeling'  # 'transfer_modeling'
         self.data_set = ''

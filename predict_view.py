@@ -374,7 +374,7 @@ class Ui_widget_5(QWidget):
                 if x is None or y is None:
                     continue
                 else:
-                    figure.add_line(f'原始数据', x, y, style={'ls': '', 'marker': 'o', 'color': self.color[color % 10]})
+                    figure.add_line(f'原始数据', x, y, style={'ls': '', 'marker': '.', 'color': self.color[color % 10]})
                 color += 1
                 self.plot_gridLayout.addWidget(figure, i, j)
 
@@ -409,7 +409,7 @@ class Ui_widget_5(QWidget):
                         continue
                     else:
                         figure.add_line(f'原始数据[{self.plot_z_name[0]}={z[k]}]', x, y,
-                                        style={'ls': '', 'marker': 'o', 'color': self.color[color % 10]})
+                                        style={'ls': '', 'marker': '.', 'color': self.color[color % 10]})
                     color += 1
                 self.plot_gridLayout.addWidget(figure, i, j)
 

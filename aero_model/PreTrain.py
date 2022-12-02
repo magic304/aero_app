@@ -11,7 +11,6 @@ from keras.callbacks import Callback
 from keras.layers import LSTM, Dense
 from keras.optimizers import Nadam
 # 确定随机种子，确保每次结果一样
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 seed = 42
@@ -131,9 +130,9 @@ class PreTrainModel():
         self.model = Sequential()
         self.model.add(
             LSTM(64, input_shape=(self.x_train_st.shape[1], self.x_train_st.shape[2]), activation='relu', name="lstm"))
-        self.model.add(Dense(32, activation='relu', name="layer2"))
-        self.model.add(Dense(32, activation='relu', name="layer3"))
-        self.model.add(Dense(self.y_shape[1], name="out"))
+        self.model.add(Dense(13, activation='relu', name="layer2"))
+        self.model.add(Dense(13, activation='relu', name="layer3"))
+        self.model.add(Dense(units=self.y_shape[1], input_dim=13, name="output"))
 
     def model_train(self, epochs=None, epoch_callback=None):
         epochs = epochs or 1000
@@ -194,10 +193,11 @@ if __name__ == '__main__':
     df = preTrainModel.load_data()
     preTrainModel.data_init(df=df)
 
+
     def status_callback(inx, loss, val_loss):
         print("epoc{}: {} , {}".format(inx, loss, val_loss))
+
 
     preTrainModel.model_bulid()
     preTrainModel.model_train(10, status_callback)
     preTrainModel.model_save('222')
-

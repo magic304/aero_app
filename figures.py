@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import *
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, \
     NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
+from mpl_toolkits.mplot3d import Axes3D
 
 matplotlib.rcParams['font.sans-serif'] = ['SimHei']  # 解决坐标轴中文显示问题
 matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号不显示的问题
@@ -253,7 +254,7 @@ class Figure_Line(FigureCanvas):
             if (x_data.size > 0 and y_data.size > 0):
                 self.update_xylim(x_data, y_data)
             # 添加图例
-        self.ax.legend(list(self.lines.values()), list(self.lines.keys()))
+        self.ax.legend(list(self.lines.values()), list(self.lines.keys()), fontsize=7)
         self.draw()
         # self.ax.legend([self.line, self.line2], ['sinx', 'cosx'])  # 添加图例
 
@@ -480,21 +481,21 @@ if __name__ == '__main__':
     data_table.set_data(table_data=data, table_header=['A', 'B', 'C'], vertical_header=['hell', 'wo'])
     fig_layout.addWidget(data_table)
 
-    # latex_str = '$C_{soil}=(1 - n) C_m + \\theta_w C_w$' 
+    # latex_str = '$C_{soil}=(1 - n) C_m + \\theta_w C_w$'
     # latex_str = '$k_{soil}=\\frac{\\sum f_j k_j \\theta_j}{\\sum f_j \\theta_j}$'
-    # latex_str = '公式\n $\\lambda_{soil}=k_{soil} / C_{soil}$' 
+    # latex_str = '公式\n $\\lambda_{soil}=k_{soil} / C_{soil}$'
     # latex_canvas = Latex_Canvas( parent=mainMindow)
     # latex_canvas.renderTex(latex_str)
     # fig_layout.addWidget(latex_canvas)
 
-    # LineFigure = Figure_Line(mainMindow)
-    # fig_layout.addWidget(LineFigure) 
-    # # 准备数据，绘制曲线
-    # x_data = np.arange(-4, 4, 0.02)
-    # y_data = np.sin(x_data)
-    # y2_data = np.cos(x_data)
-    # LineFigure.add_line('sinx', x_data, y_data)
-    # LineFigure.add_line('cosx', x_data, y2_data)
+    LineFigure = Figure_Line(mainMindow)
+    fig_layout.addWidget(LineFigure)
+    # 准备数据，绘制曲线
+    x_data = np.arange(-4, 4, 0.02)
+    y_data = np.sin(x_data)
+    y2_data = np.cos(x_data)
+    LineFigure.add_line('sinx', x_data, y_data)
+    LineFigure.add_line('cosx', x_data, y2_data)
 
     mainMindow.show()
     sys.exit(app.exec_())

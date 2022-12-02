@@ -126,11 +126,11 @@ class TransferModel():
     def model_bulid(self):
         self.model = Sequential()
         self.model.add(
-            LSTM(64, input_shape=(self.x_train_st.shape[1], self.x_train_st.shape[2]), activation='relu', name="lstm1"))
-        self.model.add(Dense(32, activation='relu', name="layer2"))
-        self.model.add(Dense(32, activation='relu', name="layer3"))
-        self.model.add(Dense(32, activation='relu', name="layer4"))
-        self.model.add(Dense(self.y_shape[1], name="out1"))
+            LSTM(64, input_shape=(self.x_train_st.shape[1], self.x_train_st.shape[2]), activation='relu', name="lstm"))
+        self.model.add(Dense(13, activation='relu', name="layer2"))
+        self.model.add(Dense(13, activation='relu', name="layer3"))
+        # self.model.add(Dense(32, activation='relu', name="layer4"))
+        self.model.add(Dense(self.y_shape[1], input_dim=13, name="out"))
 
     def model_train(self, epochs=None, epoch_callback=None):
 
