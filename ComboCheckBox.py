@@ -14,6 +14,7 @@ class CheckBox(QWidget):
     def __init_UI(self):
         horizontalLayout = QtWidgets.QHBoxLayout()
         self.label = QLabel()
+        self.setMaximumWidth(250)
         self.label.setText(self.name)
         self.comboCheckBox = ComboCheckBox(self.items)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)

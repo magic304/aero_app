@@ -116,8 +116,10 @@ class ModelingDialog(QDialog):
         layout_line.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         btn_train = QPushButton(" 开始训练 ")
+        btn_train.setIcon(QIcon(f'{self.absolute_path}/res/训练.png'))
         btn_train.clicked.connect(self.inspect_and_run)
         btn_cancel = QPushButton(" 取消 ")
+        btn_cancel.setIcon(QIcon(f'{self.absolute_path}/res/取消.png'))
         btn_cancel.clicked.connect(self.stop_work)
         layout_line.addWidget(btn_train)
         layout_line.addWidget(btn_cancel)

@@ -1,19 +1,22 @@
 # from SaleLSTMWidget import LSTMwidget
 import ctypes
 
-from PyQt5.QtGui import QIcon
+import qdarkstyle
 from PyQt5.QtWidgets import QDesktopWidget, QAction, QSplitter, QTabWidget, QTreeWidget, QTreeWidgetItem, QMessageBox
+import qtvscodestyle as qtvsc
+from qtvscodestyle import load_stylesheet
 
 from DataWidget import *
 from dataDialog import *
 from modingDialog import *
 from predict_view import Ui_widget_5
-# from pydot import graphviz
 
+# from pydot import graphviz
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("myappid")
 import os
+
 absolute_path = os.path.split(sys.argv[0])[0]
-os.environ["PATH"] += os.pathsep + absolute_path+'/Graphviz/bin'  #注意修改你的路径
+os.environ["PATH"] += os.pathsep + absolute_path + '/Graphviz/bin'  # 注意修改你的路径
 
 
 class MainWindow(QMainWindow):
@@ -45,7 +48,7 @@ class MainWindow(QMainWindow):
         self.tabwidget.setTabsClosable(True)
         self.tabwidget.tabCloseRequested.connect(self.closeTab)
         # self.connect(self.tabwidget,SIGNAL("tabCloseRequested(int)"),self.closeTab)
-        self.tabwidget.setTabShape(QTabWidget.TabShape.Triangular)
+        # self.tabwidget.setTabShape(QTabWidget.TabShape.Triangular)
         self.tabwidget.setMinimumWidth(800)
         self.tabwidget.setContentsMargins(0, 0, 0, 0)
         splitter.addWidget(self.treeview)
@@ -67,8 +70,8 @@ class MainWindow(QMainWindow):
         toolbar.addAction(modelingAction)
 
         self.setGeometry(30, 30, 1200, 900)
-        self.setWindowTitle('进气道数据/建模平台')
-        self.setWindowIcon(QIcon(f'{self.absolute_path}/res/data.png'))
+        self.setWindowTitle('气动力数据/建模平台')
+        self.setWindowIcon(QIcon(f'{self.absolute_path}/res/平台.png'))
         self.center()
         self.show()
 
@@ -90,7 +93,7 @@ class MainWindow(QMainWindow):
                 name = dialog.name
                 dat_widge = DataWidget(type=data_type)
                 # dat_widge.creat_by_file(file_name=file)
-                self.tabwidget.addTab(dat_widge, f"{name}")
+                self.tabwidget.addTab(dat_widge, QIcon(f'{self.absolute_path}/res/data.png'), f"{name}")
                 self.tabwidget.setCurrentWidget(dat_widge)
                 self.tree_dat.add_node(parent_type=node_type, name=name, data_type=data_type)
                 leaf_node = self.add_tree_node(node_type=node_type, node_name=name, node_dat_file='',
@@ -209,14 +212,14 @@ class MainWindow(QMainWindow):
 
         if node_type == 'data':
             dc_widge = DataWidget(type=data_type)
-            self.tabwidget.addTab(dc_widge, f"{name}")
+            self.tabwidget.addTab(dc_widge, QIcon(f'{self.absolute_path}/res/data.png'), f"{name}")
             self.tabwidget.setCurrentWidget(dc_widge)
         elif node_type == 'modeling':
             print("modeling")
             # md_widget = QtWidgets.QWidget()
             md_widget = Ui_widget_5(name)
             # md_ui.setupUi(md_widget)
-            self.tabwidget.addTab(md_widget, f"{name}")
+            self.tabwidget.addTab(md_widget, QIcon(f'{self.absolute_path}/res/modeling.png'), f"{name}")
             print(name)
             self.tabwidget.setCurrentWidget(md_widget)
 
@@ -224,4 +227,7 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     main_window = MainWindow()
+    stylesheet = load_stylesheet(qtvsc.Theme.LIGHT_VS)
+    app.setStyleSheet(stylesheet)
+    main_window.show()
     sys.exit(app.exec_())

@@ -5,7 +5,9 @@ import sys
 import uuid
 
 from PyQt5.QtCore import *
-
+from PyQt5.QtGui import QIcon
+import os
+import sys
 from figures import *
 
 absolute_path = os.path.split(sys.argv[0])[0]
@@ -23,6 +25,7 @@ class DataWidget(QMainWindow):
     def __init__(self, type=None, callback=None):
         # self.absolute_path = os.path.split(sys.argv[0])[0].replace('\\','/')
         super(DataWidget, self).__init__()
+        self.absolute_path = os.path.split(sys.argv[0])[0]
         self.type = type
         self.name = self.type
         self.model = DataCombineModel.loadModel(self.type)
@@ -92,6 +95,7 @@ class DataWidget(QMainWindow):
         layout_h.addWidget(self.file_lineEdit, stretch=1)
         self.file_browse_btn = QPushButton(self)
         self.file_browse_btn.setText("浏览/上传")
+        self.file_browse_btn.setIcon(QIcon(f'{self.absolute_path}/res/上传.png'))
         self.file_browse_btn.clicked.connect(lambda: self.browse_file())
         layout_h.addWidget(self.file_browse_btn)
         vbox.addLayout(layout_h)
@@ -104,8 +108,10 @@ class DataWidget(QMainWindow):
         vbox.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         btn_combine = QPushButton(" 合并入库 ")
+        btn_combine.setIcon(QIcon(f'{self.absolute_path}/res/数据入库.png'))
         btn_combine.clicked.connect(self.combine)
         btn_download = QPushButton(" 下载 ")
+        btn_download.setIcon(QIcon(f'{self.absolute_path}/res/下载.png'))
         btn_download.clicked.connect(self.download)
         layout_btn = QHBoxLayout()
         layout_btn.addWidget(btn_combine)
