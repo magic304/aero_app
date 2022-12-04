@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import *
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, \
     NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
-from mpl_toolkits.mplot3d import Axes3D
 
 matplotlib.rcParams['font.sans-serif'] = ['SimHei']  # 解决坐标轴中文显示问题
 matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号不显示的问题
@@ -175,8 +174,8 @@ class Figure_Line(FigureCanvas):
         self.fig = Figure(figsize=(width, height))  # , dpi=120
         super(Figure_Line, self).__init__(self.fig)
         self.lines = {}
-        self.ymin = 0
-        self.ymax = 1
+        self.ymin = None
+        self.ymax = None
         self.xmin = None
         self.xmax = None
         self.ax = self.fig.add_subplot(111)  # 111表示1行1列，第一张曲线图
@@ -196,7 +195,7 @@ class Figure_Line(FigureCanvas):
     def init_toolbar(self, parent=None):
         self.naviBar = NavigationToolbar(self, parent, coordinates=False)  # 创建工具栏
         # self.naviBar.setSizePolicy(QSizePolicy.Policy.MinimumExpanding,QSizePolicy.Policy.Minimum)
-        self.naviBar.setMaximumWidth(self.width() / 4)
+        self.naviBar.setMaximumWidth(self.width() / 9)
         self.naviBar.setMovable(True)
         self.mpl_connect("scroll_event", self.do_scrollZoom)  # 支持鼠标滚轮缩放
         self.blitted_cursor = BlittedCursor(self.ax)
@@ -284,11 +283,15 @@ class Figure_Line(FigureCanvas):
             self.xmax = np.max(x_data)
         self.xmin = min(self.xmin, np.min(x_data))
         self.xmax = max(self.xmax, np.max(x_data))
-        self.ax.set_xlim(self.xmin, self.xmax)
-
+        self.ax.set_xlim(self.xmin - abs(0.05 * self.xmin), self.xmax + abs(0.05 * self.xmax))
+        if self.ymin is None:
+            self.ymin = np.min(y_data)
+        if self.ymax is None:
+            self.ymax = np.max(y_data)
         self.ymin = min(self.ymin, np.min(y_data))
         self.ymax = max(self.ymax, np.max(y_data))
-        self.ax.set_ylim(self.ymin, self.ymax + 0.2 * self.ymax)
+        self.ax.set_ylim(self.ymin - abs(0.1 * self.ymin), self.ymax + abs(0.1 * self.ymax))
+
         # ymin=np.min(y_data)
         # self.ymin = self.ymin if  ymin>self.ymin else ymin   
         # ymax=np.max(y_data)
