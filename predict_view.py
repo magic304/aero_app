@@ -381,7 +381,7 @@ class Ui_widget_5(QWidget):
             input_df.sort_values(by=self.plot_x_name[i], inplace=True, ascending=True)
             for j in range(len(self.plot_y_name)):
                 color = 0
-                figure = Figure_Line(title=f'预测结果({self.plot_type})', xlabel=f'{self.plot_x_name[i]}',
+                figure = Figure_Line(title=f'预测结果({self.plot_x_name[i]}--{self.plot_y_name[j]})', xlabel=f'{self.plot_x_name[i]}',
                                      ylabel=f'{self.plot_y_name[j]}')
                 x = df[self.plot_x_name[i]].to_numpy()
                 y = df[self.plot_y_name[j]].to_numpy()
@@ -407,7 +407,7 @@ class Ui_widget_5(QWidget):
             input_df.sort_values(by=self.plot_x_name[i], inplace=True, ascending=True)
             for j in range(len(self.plot_y_name)):
                 color = 0
-                figure = Figure_Line(title=f'预测结果({self.plot_type})', xlabel=f'{self.plot_x_name[i]}',
+                figure = Figure_Line(title=f'预测结果({self.plot_x_name[i]}--{self.plot_y_name[j]})', xlabel=f'{self.plot_x_name[i]}',
                                      ylabel=f'{self.plot_y_name[j]}')
                 for k in range(len(z)):
                     num = z[k]
