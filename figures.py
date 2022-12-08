@@ -239,7 +239,7 @@ class Figure_Line(FigureCanvas):
     def add_line(self, name, x_data, y_data, style={'ls': '-', 'marker': None, 'color': None}, newAx=None):
         if newAx:
             newAx = self.ax.twinx()  # instantiate a second axes that shares the same x-axis
-            line = newAx.plot(x_data, y_data, linestyle=style['ls'], marker=style['marker'], color=style['color'])
+            line = newAx.plot(x_data, y_data, linestyle=style['ls'], marker=style['marker'], color=style['color'], markerfacecolor='white')
             self.lines[name] = line[0]
             newAx.set_ylabel(name, color=style['color'])
             from matplotlib import ticker
@@ -247,13 +247,13 @@ class Figure_Line(FigureCanvas):
             newAx.tick_params(axis='y', colors=style['color'])
             # newAx.add_line(line[0]) 
         else:
-            line = self.ax.plot(x_data, y_data, linestyle=style['ls'], marker=style['marker'], color=style['color'])
+            line = self.ax.plot(x_data, y_data, linestyle=style['ls'], marker=style['marker'], color=style['color'], markerfacecolor='white')
             self.lines[name] = line[0]
             # self.ax.add_line(line[0]) 
             if (x_data.size > 0 and y_data.size > 0):
                 self.update_xylim(x_data, y_data)
             # 添加图例
-        self.ax.legend(list(self.lines.values()), list(self.lines.keys()), fontsize=7)
+        self.ax.legend(list(self.lines.values()), list(self.lines.keys()), fontsize=8)
         self.draw()
         # self.ax.legend([self.line, self.line2], ['sinx', 'cosx'])  # 添加图例
 

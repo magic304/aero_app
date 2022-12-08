@@ -8,28 +8,35 @@ matplotlib.rcParams['font.sans-serif'] = ['SimHei']  # 解决坐标轴中文显�
 matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号不显示的问题
 
 
-class Figure_Line(FigureCanvas):
+class Figure_Line_3D(FigureCanvas):
     """ 创建折线画板类 """
     colors = ['red', 'black', 'blue', 'brown', 'green']
 
-    def __init__(self, parent=None, width=4.3, height=3.8, title='曲线', xlabel='x轴', ylabel='y轴'):
+    def __init__(self, parent=None, width=4.3, height=3.8, title='曲线', xlabel='x轴', ylabel='y轴', zlabel='z轴'):
         self.fig = Figure(figsize=(width, height))  # , dpi=120
-        super(Figure_Line, self).__init__(self.fig)
+        super(Figure_Line_3D, self).__init__(self.fig)
         self.lines = {}
-        self.ymin = 0
-        self.ymax = 1
+        self.ymin = None
+        self.ymax = None
         self.xmin = None
         self.xmax = None
-        self.ax = self.fig.add_subplot(111)  # 111表示1行1列，第一张曲线图
-
+        self.zmin = None
+        self.zmax = None
+        self.ax = self.fig.add_subplot(111, projection='3d')
+        self.fig.add_axes(self.ax)
+        self.ax.set_xlim3d(0, 30)
+        self.ax.set_ylim3d(0, 30)
+        self.ax.set_zlim3d(0, 30)
         self.ax.grid(True)  # 添加网格
+
         self.ax.set_title(title)  # 设置标题
         self.ax.set_xlabel(xlabel)  # 设置坐标名称
         self.ax.set_ylabel(ylabel)
+        self.ax.set_zlabel(zlabel)
         # self.setContentsMargins(20,20,20,20)
         # xticks(range(0,len(self.time_line),3),[self.time_line[i] for i in range(0,len(self.time_line),1) if i%3==0 ],rotation=90,fontsize=8)
         self.init_toolbar(self)
-        self.fig.tight_layout(pad=1.2)
+        # self.fig.tight_layout(pad=1.2)
 
     def set_xticks(self, ticks=None, labels=None, rotation=None,
                    fontsize=None):  # range(0,len(self.time_line),3),[self.time_line[i] for i in range(0,len(self.time_line),1) if i%3==0 ],rotation=90,fontsize=8
@@ -79,32 +86,35 @@ class Figure_Line(FigureCanvas):
         self.ax.legend(list(self.lines.values()), list(self.lines.keys()))
         self.draw()
 
-    def add_line(self, name, x_data, y_data, style={'ls': '-', 'marker': None, 'color': None}, newAx=None):
+    def add_line(self, name, x_data, y_data, z_data=None, style={'ls': '-', 'marker': None, 'color': None}, newAx=None):
+        if z_data is None:
+            z_data = y_data
         if newAx:
             newAx = self.ax.twinx()  # instantiate a second axes that shares the same x-axis
-            line = newAx.plot(x_data, y_data, linestyle=style['ls'], marker=style['marker'], color=style['color'])
+            line = newAx.plot(x_data, y_data, z_data, linestyle=style['ls'], marker=style['marker'],
+                              color=style['color'], markerfacecolor='white')
             self.lines[name] = line[0]
             newAx.set_ylabel(name, color=style['color'])
             from matplotlib import ticker
             newAx.yaxis.set_major_formatter(ticker.PercentFormatter(xmax=1, decimals=0))
             newAx.tick_params(axis='y', colors=style['color'])
-            # newAx.add_line(line[0])
         else:
-            line = self.ax.plot(x_data, y_data, linestyle=style['ls'], marker=style['marker'], color=style['color'])
+            line = self.ax.plot(x_data, y_data, z_data, linestyle=style['ls'], marker=style['marker'],
+                                color=style['color'], markerfacecolor='white')
             self.lines[name] = line[0]
             # self.ax.add_line(line[0])
             if (x_data.size > 0 and y_data.size > 0):
-                self.update_xylim(x_data, y_data)
+                self.update_xyzlim(x_data, y_data, z_data)
             # 添加图例
-        self.ax.legend(list(self.lines.values()), list(self.lines.keys()))
+        self.ax.legend(list(self.lines.values()), list(self.lines.keys()), fontsize=8)
         self.draw()
-        # self.ax.legend([self.line, self.line2], ['sinx', 'cosx'])  # 添加图例
 
-    def updateData(self, name, x_data, y_data):
+    def updateData(self, name, x_data, y_data, z_data):
         if name in self.lines:
             line = self.lines[name]
             line.set_xdata(x_data)
             line.set_ydata(y_data)
+            line.set_zdata(z_data)
         self.draw()
 
     def add_data(self, x_point, y_dict):  # x, y={name:value}
@@ -113,28 +123,38 @@ class Figure_Line(FigureCanvas):
                 line = self.lines[name]
                 x_data = np.append(line.get_xdata(), x_point)
                 y_data = np.append(line.get_ydata(), y_dict[name])
+                z_data = np.append(line.get_zdata(), y_dict[name])
                 line.set_xdata(x_data)
                 line.set_ydata(y_data)
+                line.set_zdata(z_data)
                 self.update_xylim(x_data, y_data)
         self.draw()
 
     # 更新图的x\y轴范围
-    def update_xylim(self, x_data, y_data):
+    def update_xyzlim(self, x_data, y_data, z_data):
         if self.xmin is None:
             self.xmin = np.min(x_data)
         if self.xmax is None:
             self.xmax = np.max(x_data)
         self.xmin = min(self.xmin, np.min(x_data))
         self.xmax = max(self.xmax, np.max(x_data))
-        self.ax.set_xlim(self.xmin, self.xmax)
+        self.ax.set_xlim(self.xmin - abs(0.05 * self.xmin), self.xmax + abs(0.05 * self.xmax))
 
+        if self.ymin is None:
+            self.ymin = np.min(y_data)
+        if self.ymax is None:
+            self.ymax = np.max(y_data)
         self.ymin = min(self.ymin, np.min(y_data))
         self.ymax = max(self.ymax, np.max(y_data))
-        self.ax.set_ylim(self.ymin, self.ymax + 0.2 * self.ymax)
-        # ymin=np.min(y_data)
-        # self.ymin = self.ymin if  ymin>self.ymin else ymin
-        # ymax=np.max(y_data)
-        # self.ymax = self.ymax if  ymax<self.ymin else ymax
+        self.ax.set_ylim(self.ymin - abs(0.1 * self.ymin), self.ymax + abs(0.1 * self.ymax))
+
+        if self.zmin is None:
+            self.zmin = np.min(z_data)
+        if self.zmax is None:
+            self.zmax = np.max(z_data)
+        self.zmin = min(self.zmin, np.min(z_data))
+        self.zmax = max(self.zmax, np.max(z_data))
+        self.ax.set_zlim(self.zmin - abs(0.1 * self.zmin), self.zmax + abs(0.1 * self.zmax))
 
 
 class BlittedCursor:
@@ -148,7 +168,7 @@ class BlittedCursor:
         self.horizontal_line = ax.axhline(color='k', lw=0.8, ls='--')
         self.vertical_line = ax.axvline(color='k', lw=0.8, ls='--')
         # text location in axes coordinates
-        self.text = ax.text(0.65, 0.95, '', transform=ax.transAxes)
+        # self.text = ax.text(0.65, 0.95, '', transform=ax.transAxes)
         self._creating_background = False
         ax.figure.canvas.mpl_connect('draw_event', self.on_draw)
 
@@ -159,7 +179,7 @@ class BlittedCursor:
         need_redraw = self.horizontal_line.get_visible() != visible
         self.horizontal_line.set_visible(visible)
         self.vertical_line.set_visible(visible)
-        self.text.set_visible(visible)
+        # self.text.set_visible(visible)
         return need_redraw
 
     def create_new_background(self):
@@ -187,10 +207,36 @@ class BlittedCursor:
             x, y = event.xdata, event.ydata
             self.horizontal_line.set_ydata(y)
             self.vertical_line.set_xdata(x)
-            self.text.set_text('x=%1.2f, y=%1.2f' % (x, y))
+            # self.text.set_text('x=%1.2f, y=%1.2f' % (x, y))
 
             self.ax.figure.canvas.restore_region(self.background)
             self.ax.draw_artist(self.horizontal_line)
             self.ax.draw_artist(self.vertical_line)
-            self.ax.draw_artist(self.text)
+            # self.ax.draw_artist(self.text)
             self.ax.figure.canvas.blit(self.ax.bbox)
+
+
+if __name__ == '__main__':
+    from PyQt5.QtWidgets import QMainWindow, QApplication, QGridLayout, QWidget
+    import sys
+
+    app = QApplication(sys.argv)
+    mainMindow = QMainWindow()
+
+    mainMindow.resize(500, 200)
+    widget = QWidget()
+    fig_layout = QGridLayout(mainMindow)
+    widget.setLayout(fig_layout)
+    mainMindow.setCentralWidget(widget)
+    LineFigure = Figure_Line_3D(mainMindow, title='函数', xlabel="x", ylabel="y")
+    fig_layout.addWidget(LineFigure)
+    # 准备数据，绘制曲线
+    x_data = np.arange(-4, 4, 0.02)
+    y_data = np.sin(x_data)
+    z_data = np.sin(x_data)
+    y2_data = np.cos(x_data)
+    LineFigure.add_line('sinx', x_data, y_data)
+    LineFigure.add_line('cosx', x_data, y2_data)
+
+    mainMindow.show()
+    sys.exit(app.exec_())

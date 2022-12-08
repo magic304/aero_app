@@ -92,7 +92,7 @@ class ModelingDialog(QDialog):
 
         layout_line = QHBoxLayout()
         self.xfield_list = ComboList("自变量")
-        self.yfield_list = ComboList("应变量")
+        self.yfield_list = ComboList("因变量")
         # self.__init_xy_fields()
         layout_line.addWidget(self.xfield_list)
         layout_line.addWidget(self.yfield_list)
