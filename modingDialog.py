@@ -21,7 +21,7 @@ class ModelingDialog(QDialog):
         self.setMinimumSize(900, 550)
         self.absolute_path = os.path.split(sys.argv[0])[0]
         self.setWindowTitle('建模')
-        self.name = '2D无粘模型'
+        self.name = '气动力模型'
         self.type = 'direct_modeling'  # 'transfer_modeling'
         self.data_set = ''
         self.data_type = None
@@ -102,6 +102,7 @@ class ModelingDialog(QDialog):
         layout_line = QHBoxLayout()
         layout_line.addWidget(QLabel("模型名称"))
         self.model_name_line = QLineEdit(self.name)
+        self.model_name_line.textChanged.connect(self.name_textChanged)
         layout_line.addWidget(self.model_name_line, stretch=1)
         vbox_layout.addLayout(layout_line)
 
@@ -137,6 +138,11 @@ class ModelingDialog(QDialog):
     #     self.progressBar.setGeometry(0, 0, 100, 3)
     #     self.progressBar.setRange(0, 100)  # 设置进度条的范围
     #     self.updateProgress("正在处理", '初始化', 5)
+
+    def name_textChanged(self):
+        self.name = self.model_name_line.text()
+        self.lossFigure.ax.set_title(f'{self.name}-收敛曲线')
+        self.lossFigure.draw()
 
     def btnstate(self, b_type):  # 输出按钮1与按钮2的状态，选中还是没选中
         self.type = b_type

@@ -499,6 +499,7 @@ if __name__ == '__main__':
     y2_data = np.cos(x_data)
     LineFigure.add_line('sinx', x_data, y_data)
     LineFigure.add_line('cosx', x_data, y2_data)
+    LineFigure.ax.set_title('123')
 
     mainMindow.show()
     sys.exit(app.exec_())
