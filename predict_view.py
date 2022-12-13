@@ -247,7 +247,7 @@ class Ui_widget_5(QWidget):
             # 获取屏幕分辨率
             screenRect = QApplication.desktop().screenGeometry()
             # 图片想要的占比
-            y = screenRect.height() * 0.55
+            y = screenRect.height() * 0.5
             print(y)
             img = Image.open(path)
             width, height = img.size

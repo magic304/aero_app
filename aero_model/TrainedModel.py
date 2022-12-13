@@ -13,7 +13,7 @@ np.random.seed(seed)
 tf.random.set_seed(seed)
 
 absolute_path = os.path.split(sys.argv[0])[0]
-
+os.environ["PATH"] += os.pathsep + absolute_path + '/Graphviz/bin'  # 注意修改你的路径
 
 class TrainedModel():
     def reshape_input(self, x) -> None:

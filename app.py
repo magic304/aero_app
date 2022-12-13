@@ -1,7 +1,6 @@
 # from SaleLSTMWidget import LSTMwidget
 import ctypes
 
-import qdarkstyle
 from PyQt5.QtWidgets import QDesktopWidget, QAction, QSplitter, QTabWidget, QTreeWidget, QTreeWidgetItem, QMessageBox
 import qtvscodestyle as qtvsc
 from qtvscodestyle import load_stylesheet
