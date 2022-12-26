@@ -9,16 +9,18 @@ from keras import Sequential
 from keras.callbacks import Callback
 from keras.layers import LSTM, Dense
 # 确定随机种子，确保每次结果一样
+from opt_einsum.backends import torch
 from sklearn.preprocessing import StandardScaler
 from tensorflow import keras
 from tensorflow.python.framework import ops
 from tensorflow.python.keras import backend as K
 from tensorflow.python.ops import math_ops
+import random
 
 seed = 42
 np.random.seed(seed)
 tf.random.set_seed(seed)
-
+random.seed(seed)
 absolute_path = os.path.split(sys.argv[0])[0]
 
 
@@ -142,7 +144,7 @@ class TransferModel():
         for layer in self.model.layers[2:3]:
             layer.trainable = False
         print(self.model.summary())
-        self.model.compile(optimizer=keras.optimizers.Nadam(), loss=mmd_loss)
+        self.model.compile(optimizer=tf.optimizers.Nadam(), loss=mmd_loss)
         history = LossHistory(epoch_callback)
         self.model.fit(self.x_train_st, self.y_train, epochs=epochs,
                        validation_data=(self.x_valid_st, self.y_valid),
@@ -155,7 +157,7 @@ class TransferModel():
         # 解冻
         for layer in self.model.layers:
             layer.trainable = True
-        self.model.compile(optimizer=keras.optimizers.Nadam(1e-3), loss="MSE")
+        self.model.compile(optimizer=tf.optimizers.Nadam(1e-3), loss="MSE")
         history = LossHistory(epoch_callback, flag=False, epochs=epochs)
         self.model.fit(self.x_train_st, self.y_train, epochs=epochs,
                        validation_data=(self.x_valid_st, self.y_valid),

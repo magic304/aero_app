@@ -403,12 +403,16 @@ class Ui_widget_5(QWidget):
                 y = df[self.plot_y_name[j]].to_numpy()
                 print(j % 10)
                 figure.add_line(f'预测数据', x, y, style={'ls': '-.', 'marker': '', 'color': self.color[color % 10]})
-                x = input_df[self.plot_x_name[i]].to_numpy()
-                y = input_df[self.plot_y_name[j]].to_numpy()
-                if x is None or y is None:
+                try:
+                    x = input_df[self.plot_x_name[i]].to_numpy()
+                    y = input_df[self.plot_y_name[j]].to_numpy()
+                except:
+                    color += 1
+                    self.plot_gridLayout.addWidget(figure, i, j)
                     continue
                 else:
-                    figure.add_line(f'原始数据', x, y, style={'ls': '', 'marker': 'o', 'color': self.color[color % 10]})
+                    if x is not None and y is not None:
+                        figure.add_line(f'原始数据', x, y, style={'ls': '', 'marker': 'o', 'color': self.color[color % 10]})
                 color += 1
                 self.plot_gridLayout.addWidget(figure, i, j)
 
@@ -435,20 +439,21 @@ class Ui_widget_5(QWidget):
                     df1 = df[df[name[0]] == num]
                     x = df1[self.plot_x_name[i]].to_numpy()
                     y = df1[self.plot_y_name[j]].to_numpy()
-                    if x is None or y is None:
-                        continue
-                    else:
+                    if x is not None and y is not None:
                         figure.add_line(f'预测数据[{self.plot_group_name[0]}={z[k]}]', x, y,
                                         style={'ls': '-.', 'marker': '', 'color': self.color[color % 10]})
                     df2 = input_df[input_df[name[0]] == num]
-                    x = df2[self.plot_x_name[i]].to_numpy()
-                    y = df2[self.plot_y_name[j]].to_numpy()
-                    if x is None or y is None:
+                    try:
+                        x = df2[self.plot_x_name[i]].to_numpy()
+                        y = df2[self.plot_y_name[j]].to_numpy()
+                    except:
+                        color += 1
                         continue
                     else:
-                        figure.add_line(f'原始数据[{self.plot_group_name[0]}={z[k]}]', x, y,
-                                        style={'ls': '', 'marker': 'o', 'color': self.color[color % 10]})
-                    color += 1
+                        if x is not None and y is not None:
+                            figure.add_line(f'原始数据[{self.plot_group_name[0]}={z[k]}]', x, y,
+                                            style={'ls': '', 'marker': 'o', 'color': self.color[color % 10]})
+                        color += 1
                 self.plot_gridLayout.addWidget(figure, i, j)
 
     def plot_3d_group(self):
@@ -473,21 +478,21 @@ class Ui_widget_5(QWidget):
                     x = df1[self.plot_x_name[i]].to_numpy()
                     y = df1[self.plot_y_name[j]].to_numpy()
                     group = df1[self.plot_group_name[0]].to_numpy()
-                    if x is None or y is None:
-                        continue
-                    else:
+                    if x is not None and y is not None:
                         figure.add_line(f'预测数据[{self.plot_group_name[0]}={z[k]}]', group, x, y,
                                         style={'ls': '-.', 'marker': '', 'color': self.color[color % 10]})
                     df2 = input_df[input_df[name[0]] == num]
-                    x = df2[self.plot_x_name[i]].to_numpy()
-                    y = df2[self.plot_y_name[j]].to_numpy()
-                    group = df2[self.plot_group_name[0]].to_numpy()
-                    if x is None or y is None:
+                    try:
+                        x = df2[self.plot_x_name[i]].to_numpy()
+                        y = df2[self.plot_y_name[j]].to_numpy()
+                    except:
+                        color += 1
                         continue
                     else:
-                        figure.add_line(f'原始数据[{self.plot_group_name[0]}={z[k]}]', group, x, y,
-                                        style={'ls': '', 'marker': 'o', 'color': self.color[color % 10]})
-                    color += 1
+                        if x is not None and y is not None:
+                            figure.add_line(f'原始数据[{self.plot_group_name[0]}={z[k]}]', group, x, y,
+                                            style={'ls': '', 'marker': 'o', 'color': self.color[color % 10]})
+                        color += 1
                 self.plot_gridLayout.addWidget(figure, i, j)
 
 

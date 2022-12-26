@@ -230,3 +230,4 @@ if __name__ == '__main__':
     app.setStyleSheet(stylesheet)
     main_window.show()
     sys.exit(app.exec_())
+

@@ -1,6 +1,8 @@
 import os.path
 import pickle
+import random
 import sys
+import os
 
 import numpy as np
 import pandas as pd
@@ -9,15 +11,24 @@ import tensorflow as tf
 from keras import Sequential
 from keras.callbacks import Callback
 from keras.layers import LSTM, Dense
-from keras.optimizers import Nadam
 # 确定随机种子，确保每次结果一样
 from sklearn.preprocessing import StandardScaler
 
 seed = 42
+os.environ['PYTHONHASHSEED'] = str(seed)
 np.random.seed(seed)
 tf.random.set_seed(seed)
+random.seed(seed)
+os.environ['TF_DETERMINISTIC_OPS'] = '1'
+os.environ['TF_CUDNN_DETERMINISTIC'] = '1'
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
+tf.random_normal_initializer(seed=seed)
 
 absolute_path = os.path.split(sys.argv[0])[0]
+
+
 
 
 class PreTrainModel():
@@ -137,7 +148,7 @@ class PreTrainModel():
     def model_train(self, epochs=None, epoch_callback=None):
         epochs = epochs or 1000
         print(self.model.summary())
-        self.model.compile(optimizer=Nadam(), loss="MSE")
+        self.model.compile(optimizer=tf.optimizers.Nadam(), loss="MSE")
         history = LossHistory(epoch_callback)
         self.model.fit(self.x_train_st, self.y_train, epochs=epochs,
                        validation_data=(self.x_valid_st, self.y_valid),
